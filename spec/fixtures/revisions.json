@@ -1,0 +1,44 @@
+[
+  {
+    "rev": "2b0479b229d",
+    "thumb_exists": false,
+    "path": "\/stocks.tar.gz",
+    "is_dir": false,
+    "client_mtime": "Sat, 14 May 2016 11:30:20 +0000",
+    "icon": "page_white_compressed",
+    "bytes": 834794,
+    "modified": "Sat, 14 May 2016 11:30:20 +0000",
+    "size": "815.2 KB",
+    "root": "app_folder",
+    "mime_type": "application\/octet-stream",
+    "revision": 688
+  },
+  {
+    "rev": "2b3479b229d",
+    "thumb_exists": false,
+    "path": "\/stocks.tar.gz",
+    "is_dir": false,
+    "client_mtime": "Sun, 15 May 2016 00:06:24 +0000",
+    "icon": "page_white_compressed",
+    "bytes": 1802876,
+    "modified": "Sun, 15 May 2016 00:06:24 +0000",
+    "size": "1.7 MB",
+    "root": "app_folder",
+    "mime_type": "application\/octet-stream",
+    "revision": 691
+  },
+  {
+    "rev": "2b1479b229d",
+    "thumb_exists": false,
+    "path": "\/stocks.tar.gz",
+    "is_dir": false,
+    "client_mtime": "Sat, 14 May 2016 15:12:22 +0000",
+    "icon": "page_white_compressed",
+    "bytes": 1887891,
+    "modified": "Sat, 14 May 2016 15:12:23 +0000",
+    "size": "1.8 MB",
+    "root": "app_folder",
+    "mime_type": "application\/octet-stream",
+    "revision": 689
+  }
+]
