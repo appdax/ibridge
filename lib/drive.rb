@@ -38,6 +38,8 @@ class Drive
     revisions_to_import.each_with_index do |rev, i|
       dir = download_revision(rev)
 
+      next unless dir
+
       yield rev, dir
 
       self.last_imported_revision = rev if i == 0
@@ -122,6 +124,8 @@ class Drive
     FileUtils.rm_rf 'tmp/stocks'
     `cd tmp && tar xvzf stocks.tar.gz &>/dev/null`
     'tmp/stocks'
+  rescue DropboxError
+    nil
   ensure
     FileUtils.rm_rf 'tmp/stocks.tar.gz'
   end

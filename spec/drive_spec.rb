@@ -146,5 +146,19 @@ RSpec.describe Drive do
         expect(@stub_rev).to_not have_been_requested
       end
     end
+
+    context 'when revision has been deleted in the meantime' do
+      let(:each_rev) { ->(b) { drive.each_revision_to_import(&b) } }
+
+      before do
+        stub_request(:get, /stocks.tar.gz\?rev=2/).to_return status: 404
+      end
+
+      it { expect { each_rev {} }.to_not raise_error }
+
+      it('should yield 2 times') do
+        expect(&each_rev).to yield_control.exactly(2).times
+      end
+    end
   end
 end
