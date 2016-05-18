@@ -55,6 +55,7 @@ class Importer < Client
   def path(value = nil)
     @path = value unless value.nil?
     @path ||= 'tmp/stocks'
+    value.nil? ? @path : self
   end
 
   # Files for import found under the provided path.
