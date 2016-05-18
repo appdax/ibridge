@@ -23,9 +23,10 @@ def import_revisions(drop_feeds = true)
       puts "Downloaded revision #{rev}"
       import_stocks(path)
     end
+
+    unify_stocks(drop_feeds)
   end
 
-  unify_stocks(drop_feeds)
   puts "Total time elapsed #{time.round(2)} seconds"
 end
 
