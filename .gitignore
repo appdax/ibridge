@@ -25,3 +25,4 @@ config/development.yml
 /pkg/
 /rdoc/
 /docker/
+/log/
