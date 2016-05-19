@@ -36,7 +36,7 @@ class Importer < Client
   # @return [ Importer ]
   def initialize(batch_size: 500, path: 'tmp/stocks')
     path(path)
-    batch_size(batch_size)
+    super(batch_size: batch_size)
   end
 
   # Path to the folder with the json files to import into the db.

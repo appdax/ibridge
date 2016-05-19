@@ -25,8 +25,8 @@ class Unifier < Client
   #
   # @return [ Unifier ]
   def initialize(batch_size: 500, drop_feeds: false)
-    batch_size(batch_size)
     drop_feeds(drop_feeds)
+    super(batch_size: batch_size)
   end
 
   # Set to true to drop all feed collections after unification.
