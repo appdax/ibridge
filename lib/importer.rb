@@ -127,8 +127,8 @@ class Importer < Client
     feeds.map! do |feed|
       {
         replace_one: {
-          filter: { _id: feed[:_id], 'meta.timestamp': { '$lt': feed[:meta][:timestamp] } },
-          replacement: feed, upsert: true
+          replacement: feed, upsert: true,
+          filter: { _id: feed[:_id], 'meta.age': { '$lte': feed[:meta][:age] } }
         }
       }
     end
