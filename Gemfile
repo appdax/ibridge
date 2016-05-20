@@ -14,6 +14,7 @@ end
 group :test do
   gem 'rspec', '~> 3.4'
   gem 'webmock', '~> 2.0'
+  gem 'fakefs', '~> 0.8'
   gem 'simplecov'
   gem 'codeclimate-test-reporter'
 end
