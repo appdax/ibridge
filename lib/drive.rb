@@ -84,6 +84,8 @@ class Drive
   # @example To set a revision number
   #   last_imported_revision = "321"
   #
+  # @param [ String ] revision The revision number to set for.
+  #
   # @return [ Void ]
   def last_imported_revision=(revision)
     raise BadRevisionError, revision unless revisions.include? revision
