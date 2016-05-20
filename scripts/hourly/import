@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd $APP_HOME && \
+bundle exec rake import:stocks
