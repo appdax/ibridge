@@ -1,0 +1,14 @@
+install: true
+
+sudo: false
+
+services:
+  - docker
+
+before_script:
+  - git checkout $TRAVIS_BRANCH
+
+script:
+  - docker build -t appdax/sbridge:test -f Dockerfile.test .
+  - docker run -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN -t appdax/sbridge:test
+  - docker rmi -f appdax/sbridge:test

@@ -135,6 +135,6 @@ class Drive
   #
   # @return [ DropboxClient ]
   def client
-    @client ||= DropboxClient.new ENV['ACCESS_TOKEN']
+    @client ||= DropboxClient.new ENV.fetch('ACCESS_TOKEN', '')
   end
 end

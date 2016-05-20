@@ -1,3 +1,5 @@
+require 'hashdiff'
+
 RSpec.describe Unifier do
   it { is_expected.to be_a(Client) }
 
@@ -27,6 +29,51 @@ RSpec.describe Unifier do
       context 'when initialized with a value' do
         let(:client) { described_class.new drop_feeds: true }
         describe('#drop_feeds') { it { is_expected.to be_truthy } }
+      end
+    end
+  end
+
+  describe '#run' do
+    let!(:db) { Importer.send(:connection) }
+
+    before do
+      json     = IO.read('spec/fixtures/facebook.json')
+      importer = Importer.new
+
+      FileUtils.mkdir_p importer.path
+      IO.write File.join(importer.path, 'fb.json'), json
+
+      importer.path('tmp/data').run
+    end
+
+    context 'when unifying the stock' do
+      let(:feeds) { db.collections.delete_if { |col| col.name == 'stocks' } }
+
+      context 'when keeping feed collections' do
+        before { Unifier.new.drop_feeds(false).run }
+        describe 'feed collections' do
+          it { expect(feeds).to_not be_empty }
+        end
+      end
+
+      context 'when dropping feed collections after' do
+        before { Unifier.new.drop_feeds(true).run }
+
+        describe 'feed collections' do
+          it { expect(feeds).to be_empty }
+        end
+
+        describe 'unified stock' do
+          let(:unified) { db[:stocks].find.limit(1).first }
+          let(:expected) do
+            content = IO.read('spec/fixtures/facebook.unified.yaml')
+            YAML.load content
+          end
+
+          it('should be equal to facebook.unified.yaml') do
+            expect(HashDiff.diff(unified, expected)).to be_empty
+          end
+        end
       end
     end
   end
