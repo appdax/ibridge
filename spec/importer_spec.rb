@@ -1,3 +1,5 @@
+require 'fakefs/spec_helpers'
+
 RSpec.describe Importer do
   it { is_expected.to be_a(Client) }
 
@@ -51,17 +53,16 @@ RSpec.describe Importer do
     end
 
     context 'when assigning an folder with 2 files' do
+      include FakeFS::SpecHelpers
       let(:importer) { Importer.new path: 'tmp/data' }
       subject { importer.files_to_import.count }
 
       before do
         FileUtils.mkdir_p importer.path
-        IO.write File.join(importer.path, 'f1.json'), ''
-        IO.write File.join(importer.path, 'f2.json'), ''
-        IO.write File.join(importer.path, 'f3.txt'), ''
+        File.write File.join(importer.path, 'f1.json'), ''
+        File.write File.join(importer.path, 'f2.json'), ''
+        File.write File.join(importer.path, 'f3.txt'), ''
       end
-
-      after { FileUtils.rm_rf importer.path }
 
       it { is_expected.to eq(2) }
     end
