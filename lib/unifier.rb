@@ -52,6 +52,7 @@ class Unifier < Client
   #
   # @return [ Void ]
   def run
+    return unless client.database.collection_names.include? 'basics'
     copy_basics
     stocks_ids.each_slice(batch_size) { |stocks| unify_stocks stocks }
     drop_feed_collections if drop_feeds
