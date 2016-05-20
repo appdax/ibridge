@@ -59,6 +59,7 @@ DEPENDENCIES
   dotenv
   dropbox-sdk (~> 1.6)
   fakefs (~> 0.8)
+  hashdiff (~> 0.3)
   mongo (~> 2.2)
   pry-nav
   rake (~> 11.1)
