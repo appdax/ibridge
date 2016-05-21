@@ -16,6 +16,8 @@ private
 # Download each new revision and import them into the db.
 # Finally unify the feeds and cleanup the collections.
 def import_revisions(drop_feeds = true)
+  return unless Drive.revisions_to_import?
+
   puts 'Downloading revisions...'
 
   time = Benchmark.realtime do
