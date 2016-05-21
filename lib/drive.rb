@@ -21,7 +21,7 @@ class Drive
 
   delegate %i(revisions revisions_to_import) => :instance
   delegate %i(last_imported_revision last_imported_revision=) => :instance
-  delegate %i(each_revision_to_import each_revision_to_import?) => :instance
+  delegate %i(each_revision_to_import revisions_to_import?) => :instance
 
   # Download, unpack and yield for each not yet imported revision. Once the
   # codeblock got executed without raising BadRevisionError, the last imported
