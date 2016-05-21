@@ -161,4 +161,19 @@ RSpec.describe Drive do
       end
     end
   end
+
+  describe '#revisions_to_import?' do
+    before { allow(drive).to receive(:last_imported_revision).and_return nil }
+    subject { drive.revisions_to_import? }
+
+    context 'when having revisions to import' do
+      before { allow(drive).to receive(:revisions).and_return [1] }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when having nothing to import' do
+      before { allow(drive).to receive(:revisions).and_return [] }
+      it { is_expected.to be_falsy }
+    end
+  end
 end
