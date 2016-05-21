@@ -157,6 +157,28 @@
         "source": "consorsbank",
         "feed": "tradingcentral"
       }
+    },
+    {
+      "items": [
+        {
+          "type": "AGM",
+          "occurs_in": 45
+        },
+        {
+          "type": "RESULTS",
+          "occurs_in": 101
+        },
+        {
+          "type": "RESULTS",
+          "occurs_in": 198
+        }
+      ],
+      "meta": {
+        "age": 0,
+        "source": "consorsbank",
+        "feed": "events",
+        "multi": true
+      }
     }
   ]
 }

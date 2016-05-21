@@ -113,6 +113,7 @@ class Unifier < Client
       store.find(_id: { '$in': ids }).batch_size(ids.size).each do |feed|
         id   = feed.delete(:_id)
         name = feed[:meta][:feed]
+        feed = { '$each': feed[:items] } if feed[:meta][:multi]
 
         (feeds[id] ||= {})[name] = feed
       end
