@@ -81,5 +81,16 @@ RSpec.describe Unifier do
         end
       end
     end
+
+    context 'when unifying 2 times without import between' do
+      before do
+        2.times { Unifier.new.drop_feeds(true).run }
+      end
+
+      describe 'stocks collection' do
+        subject { db[:stocks].find.to_a }
+        it { is_expected.to_not be_empty }
+      end
+    end
   end
 end
