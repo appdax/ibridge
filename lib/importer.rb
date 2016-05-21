@@ -128,7 +128,7 @@ class Importer < Client
       {
         replace_one: {
           replacement: feed, upsert: true,
-          filter: { _id: feed[:_id], 'meta.age': { '$lte': feed[:meta][:age] } }
+          filter: { _id: feed[:_id], 'meta.age': { '$gte': feed[:meta][:age] } }
         }
       }
     end

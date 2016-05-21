@@ -79,6 +79,11 @@ RSpec.describe Importer do
       importer.run
     end
 
+    after do
+      FileUtils.rm_rf importer.path
+      db.collections.each(&:drop)
+    end
+
     context 'when importing one stock' do
       describe 'basics feed count' do
         it { expect(db[:basics].count).to eq(1) }
@@ -106,6 +111,72 @@ RSpec.describe Importer do
 
       describe 'screener feed count' do
         it { expect(db['consorsbank-thescreener'].count).to eq(1) }
+      end
+    end
+
+    context 'when importing older stock data' do
+      let!(:older_json) do
+        data = JSON.parse(json)
+
+        data['analyses'][0]['meta']['age'] = 1_000
+        data['analyses'][0]['upgrades']    = 1_000
+
+        JSON.generate(data)
+      end
+
+      before do
+        IO.write File.join(importer.path, 'newer.json'), older_json
+        importer.run
+      end
+
+      it('should keep the newer stock') do
+        stock = db['consorsbank-factset'].find(_id: 'US30303M1027').first
+
+        expect(stock['meta']['age']).to_not eq(1_000)
+        expect(stock['upgrades']).to_not    eq(1_000)
+      end
+    end
+
+    context 'when importing stock data of same age' do
+      let!(:newer_json) do
+        data = JSON.parse(json)
+
+        data['analyses'][0]['upgrades'] = 2_000
+
+        JSON.generate(data)
+      end
+
+      before do
+        IO.write File.join(importer.path, 'newer.json'), newer_json
+        importer.run
+      end
+
+      it('should have updated stock') do
+        stock = db['consorsbank-factset'].find(_id: 'US30303M1027').first
+        expect(stock['upgrades']).to eq(2_000)
+      end
+    end
+
+    context 'when importing newer stock data' do
+      let!(:newer_json) do
+        data = JSON.parse(json)
+
+        data['analyses'][0]['meta']['age'] = 0
+        data['analyses'][0]['upgrades']    = 1_000
+
+        JSON.generate(data)
+      end
+
+      before do
+        IO.write File.join(importer.path, 'newer.json'), newer_json
+        importer.run
+      end
+
+      it('should have updated stock') do
+        stock = db['consorsbank-factset'].find(_id: 'US30303M1027').first
+
+        expect(stock['meta']['age']).to eq(0)
+        expect(stock['upgrades']).to    eq(1_000)
       end
     end
   end

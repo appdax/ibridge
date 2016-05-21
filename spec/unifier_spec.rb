@@ -34,16 +34,21 @@ RSpec.describe Unifier do
   end
 
   describe '#run' do
+    let!(:importer) { Importer.new path: 'tmp/data' }
     let!(:db) { Importer.send(:connection) }
 
     before do
-      json     = IO.read('spec/fixtures/facebook.json')
-      importer = Importer.new
+      json = IO.read('spec/fixtures/facebook.json')
 
       FileUtils.mkdir_p importer.path
       IO.write File.join(importer.path, 'fb.json'), json
 
       importer.path('tmp/data').run
+    end
+
+    after do
+      FileUtils.rm_rf importer.path
+      db.collections.each(&:drop)
     end
 
     context 'when unifying the stock' do
