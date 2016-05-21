@@ -117,8 +117,8 @@ RSpec.describe Importer do
     context 'when importing older stock data' do
       let!(:older_json) do
         data = JSON.parse(json)
-        data['analyses'][0]['meta']['age'] = 1_000
-        data['analyses'][0]['upgrades']    = 1_000
+        data['feeds'][0]['meta']['age'] = 1_000
+        data['feeds'][0]['upgrades']    = 1_000
 
         JSON.generate(data)
       end
@@ -139,7 +139,7 @@ RSpec.describe Importer do
     context 'when importing stock data of same age' do
       let!(:same_age) do
         data = JSON.parse(json)
-        data['analyses'][0]['upgrades'] = 2_000
+        data['feeds'][0]['upgrades'] = 2_000
 
         JSON.generate(data)
       end
@@ -158,8 +158,8 @@ RSpec.describe Importer do
     context 'when importing newer stock data' do
       let!(:newer_json) do
         data = JSON.parse(json)
-        data['analyses'][0]['meta']['age'] = 0
-        data['analyses'][0]['upgrades']    = 1_000
+        data['feeds'][0]['meta']['age'] = 0
+        data['feeds'][0]['upgrades']    = 1_000
 
         JSON.generate(data)
       end

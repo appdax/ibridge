@@ -9,7 +9,7 @@
     "country": "US",
     "type": 1
   },
-  "analyses": [
+  "feeds": [
     {
       "upgrades": 0,
       "downgrades": 0,

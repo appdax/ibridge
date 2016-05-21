@@ -157,7 +157,7 @@ class Importer < Client
     stocks.each_with_object({}) do |stock, feeds|
       id = { _id: stock[:basic][:isin] }
 
-      stock[:analyses].each do |feed|
+      stock[:feeds].each do |feed|
         (feeds[feed[:meta][:feed]] ||= []) << feed.merge!(id)
       end
     end.values
