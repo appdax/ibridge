@@ -71,7 +71,7 @@ RSpec.describe Importer do
   describe '#run' do
     let!(:json) { IO.read 'spec/fixtures/facebook.json' }
     let!(:importer) { Importer.new path: 'tmp/data' }
-    let!(:db) { importer.send(:client) }
+    let!(:db) { importer.send(:db) }
 
     before do
       FileUtils.mkdir_p importer.path

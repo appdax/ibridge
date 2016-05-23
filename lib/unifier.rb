@@ -52,7 +52,7 @@ class Unifier < Client
   #
   # @return [ Void ]
   def run
-    return unless client.database.collection_names.include? 'basics'
+    return unless db.collection_names.include? 'basics'
     copy_basics
     stocks_ids.each_slice(batch_size) { |stocks| unify_stocks stocks }
     drop_feed_collections if drop_feeds
@@ -64,8 +64,8 @@ class Unifier < Client
   #
   # @return [ Void ]
   def copy_basics
-    client['basics'].aggregate([{ '$match': { _id: /./ } },
-                                { '$out': 'stocks' }]).count
+    db['basics'].aggregate([{ '$match': { _id: /./ } },
+                            { '$out': 'stocks' }]).count
   end
 
   # Unifies the specified feeds of the specified stocks.
@@ -84,7 +84,7 @@ class Unifier < Client
                                update: { '$push': feeds } } }
     end
 
-    client[:stocks].bulk_write(bulks, OPTS)
+    db[:stocks].bulk_write(bulks, OPTS)
   end
 
   # Lazy enumerable of all stock IDS.
@@ -95,7 +95,7 @@ class Unifier < Client
   #
   # @return [ Array<Hash> ]
   def stocks_ids
-    client[:basics].find.batch_size(batch_size).projection(_id: 1)
+    db[:basics].find.batch_size(batch_size).projection(_id: 1)
   end
 
   # Aggregate all feed content for specified stock in one hash object.
@@ -128,7 +128,7 @@ class Unifier < Client
   #
   # @return [ Array<String> ]
   def feed_collections
-    client.database.collections.keep_if { |col| col.name =~ /-/ }
+    db.collections.keep_if { |col| col.name =~ /-/ }
   end
 
   # Drops all feed collections.
@@ -136,6 +136,6 @@ class Unifier < Client
   # @return [ Void ]
   def drop_feed_collections
     feed_collections.each(&:drop)
-    client[:basics].drop
+    db[:basics].drop
   end
 end

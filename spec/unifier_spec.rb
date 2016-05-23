@@ -35,7 +35,7 @@ RSpec.describe Unifier do
 
   describe '#run' do
     let!(:importer) { Importer.new path: 'tmp/data' }
-    let!(:db) { Importer.send(:connection) }
+    let!(:db) { importer.send(:db) }
 
     before do
       json = IO.read('spec/fixtures/facebook.json')

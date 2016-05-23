@@ -110,7 +110,7 @@ class Importer < Client
   def import_basics(basics)
     basics.map! { |stock| { insert_one: stock } }
 
-    client[:basics].bulk_write(basics, OPTS)
+    db[:basics].bulk_write(basics, OPTS)
   end
 
   # Bulk import of stock data for one feed type.
@@ -133,7 +133,7 @@ class Importer < Client
       }
     end
 
-    client[table].bulk_write(feeds, OPTS)
+    db[table].bulk_write(feeds, OPTS)
   end
 
   # Extract the basic infos of the specified stocks.

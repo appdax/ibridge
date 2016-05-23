@@ -40,9 +40,15 @@ RSpec.describe Client do
     end
   end
 
-  describe '#client' do
+  describe '#connection' do
     it('should not be public') do
-      expect(described_class.protected_instance_methods).to include(:client)
+      expect(described_class.protected_instance_methods).to include(:connection)
+    end
+  end
+
+  describe '#db' do
+    it('should not be public') do
+      expect(described_class.protected_instance_methods).to include(:db)
     end
   end
 end

@@ -11,31 +11,6 @@ class Client
 
   private_constant :OPTS
 
-  # Logger instance for mongo client.
-  #
-  # @return [ Logger ]
-  def self.logger
-    FileUtils.mkdir_p 'log'
-    file = File.open('log/mongo.log', File::WRONLY | File::APPEND | File::CREAT)
-    @@logger ||= Logger.new(file) # rubocop:disable Style/ClassVars
-  end
-
-  # Client instance to connect to the Mongo DB.
-  #
-  # @return [ Mongo::Client ]
-  def self.connection
-    @@client ||= begin # rubocop:disable Style/ClassVars
-      Mongo::Logger.logger = logger
-      Mongo::Logger.logger.level = Logger::INFO
-      Mongo::Client.new ENV['MONGO_URI']
-    end
-  end
-
-  class << self
-    # protected :connection
-    # protected :logger
-  end
-
   # Initializes the instance and sets all default values.
   #
   # @param [ Int ] batch_size Specifies the size of each batch of documents
@@ -72,7 +47,17 @@ class Client
   # Client instance to connect to the Mongo DB.
   #
   # @return [ Mongo::Client ]
-  def client
-    self.class.connection
+  def connection
+    @connection ||= begin
+      Mongo::Logger.logger.level = Logger::WARN
+      Mongo::Client.new ENV['MONGO_URI']
+    end
+  end
+
+  # Interface to the connected database.
+  #
+  # @return [ Mongo::Database ]
+  def db
+    connection.database
   end
 end
