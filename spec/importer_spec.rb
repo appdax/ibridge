@@ -116,6 +116,10 @@ RSpec.describe Importer do
       describe 'events feed count' do
         it { expect(db['consorsbank-events'].count).to eq(1) }
       end
+
+      describe 'history feed count' do
+        it { expect(db['consorsbank-history'].count).to eq(1) }
+      end
     end
 
     context 'when importing older stock data' do
