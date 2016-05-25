@@ -1,0 +1,28 @@
+{
+  "source": "consorsbank",
+  "created_at": 1462224360,
+  "version": 1,
+  "basic": {
+    "name": "FACEBOOK INC.",
+    "wkn": "A1JWVX",
+    "isin": "US30303M1027",
+    "country": "US",
+    "type": 1
+  },
+  "feeds": [
+    {
+      "price": 97.653,
+      "high": 97.91,
+      "low": 96.021,
+      "performance": 0.46,
+      "volume": 12387,
+      "meta": {
+        "age": 13,
+        "currency": "EUR",
+        "exchange": "GAT",
+        "source": "consorsbank",
+        "feed": "intraday"
+      }
+    }
+  ]
+}

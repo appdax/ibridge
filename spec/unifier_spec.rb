@@ -37,25 +37,19 @@ RSpec.describe Unifier do
     let!(:importer) { Importer.new path: 'tmp/data' }
     let!(:db) { importer.send(:db) }
 
-    before do
-      json = IO.read('spec/fixtures/facebook.json')
-
-      FileUtils.mkdir_p importer.path
-      IO.write File.join(importer.path, 'fb.json'), json
-
-      importer.path('tmp/data').run
-    end
-
-    after do
-      FileUtils.rm_rf importer.path
-      db.collections.each(&:drop)
-    end
-
     context 'when unifying the stock' do
       let(:feeds) { db.collections.delete_if { |col| col.name == 'stocks' } }
 
+      before { import_file(importer, 'spec/fixtures/facebook.json') }
+
+      after do
+        FileUtils.rm_rf importer.path
+        db.collections.each(&:drop)
+      end
+
       context 'when keeping feed collections' do
         before { Unifier.new.drop_feeds(false).run }
+
         describe 'feed collections' do
           it { expect(feeds).to_not be_empty }
         end
@@ -82,6 +76,38 @@ RSpec.describe Unifier do
       end
     end
 
+    context 'when importing all stock feeds' do
+      before { import_file(importer, 'spec/fixtures/facebook.json') }
+
+      context 'when unifying feeds' do
+        before { Unifier.new.run }
+
+        context 'when importing newer intraday feed' do
+          before do
+            db.collections.each { |col| col.drop unless col.name == 'stocks' }
+            import_file(importer, 'spec/fixtures/facebook.intra.json')
+          end
+
+          context 'when unifying intraday data' do
+            before { Unifier.new.run }
+
+            describe 'unified stock' do
+              let!(:stock) { db[:stocks].find.limit(1).first }
+
+              it('should have newer intraday data') do
+                expect(stock[:intraday][:meta][:age]).to eq(13)
+              end
+
+              it('should still have all its other content') do
+                expect(stock[:performance]).to_not be_nil
+                expect(stock[:performance]).to_not be_empty
+              end
+            end
+          end
+        end
+      end
+    end
+
     context 'when unifying 2 times without import between' do
       before do
         2.times { Unifier.new.drop_feeds(true).run }
@@ -93,4 +119,13 @@ RSpec.describe Unifier do
       end
     end
   end
+end
+
+def import_file(importer, file)
+  json = IO.read(file)
+
+  FileUtils.mkdir_p importer.path
+  IO.write File.join(importer.path, 'fb.json'), json
+
+  importer.run
 end

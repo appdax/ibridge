@@ -53,8 +53,12 @@ class Unifier < Client
   # @return [ Void ]
   def run
     return unless db.collection_names.include? 'basics'
-    copy_basics
-    stocks_ids.each_slice(batch_size) { |stocks| unify_stocks stocks }
+
+    stock_ids.each_slice(batch_size) do |stocks|
+      copy_basics(stocks)
+      unify_stocks(stocks)
+    end
+
     drop_feed_collections if drop_feeds
   end
 
@@ -62,40 +66,48 @@ class Unifier < Client
 
   # Copies all documents from basics collection over to the stocks collection.
   #
+  # @param [ Array<String> ] ids
+  #
   # @return [ Void ]
-  def copy_basics
-    db['basics'].aggregate([{ '$match': { _id: /./ } },
-                            { '$out': 'stocks' }]).count
+  def copy_basics(ids)
+    store = db[:basics]
+    len   = ids.size
+
+    store.find(_id: { '$in': ids }).batch_size(len).each_slice(len) do |basics|
+      basics.map! { |stock| { insert_one: stock } }
+      db[:stocks].bulk_write(basics, OPTS)
+    end
   end
 
   # Unifies the specified feeds of the specified stocks.
   #
-  # @param [ Array<Hash> ] stock_ids [{ _id: '..'}]
+  # @param [ Array<String> ] ids
   # @param [ Array<String> ] feed_names The names of the feed to unify.
   #
   # @return [ Void ]
-  def unify_stocks(stock_ids, feed_stores = feed_collections)
-    ids     = stock_ids.map! { |stock| stock[:_id] }
+  def unify_stocks(ids, feed_stores = feed_collections)
     content = feeds_content_for_stocks(ids, feed_stores)
     bulks   = []
 
-    content.each_pair do |stock_id, feeds|
-      bulks << { update_one: { filter: { _id: stock_id },
-                               update: { '$push': feeds } } }
+    content.each_pair do |id, feeds|
+      bulks << { update_one: { filter: { _id: id },
+                               update: { '$set': feeds } } }
     end
 
     db[:stocks].bulk_write(bulks, OPTS)
   end
 
-  # Lazy enumerable of all stock IDS.
+  # Lazy enumerable of all stock IDS within the specified collection.
   #
   # @example
   #   stock_ids
   #   # => [{ _id: 1 }, { _id: 2} ]
   #
+  # @param [ Symbol ] tbl The name of the collection.
+  #
   # @return [ Array<Hash> ]
-  def stocks_ids
-    db[:basics].find.batch_size(batch_size).projection(_id: 1)
+  def stock_ids(tbl = :basics)
+    db[tbl].find.batch_size(batch_size).projection(_id: 1).map { |s| s[:_id] }
   end
 
   # Aggregate all feed content for specified stock in one hash object.
@@ -113,7 +125,7 @@ class Unifier < Client
       store.find(_id: { '$in': ids }).batch_size(ids.size).each do |feed|
         id   = feed.delete(:_id)
         name = feed[:meta][:feed]
-        feed = { '$each': feed[:items] } if feed[:meta][:multi]
+        feed = feed[:items] if feed[:meta][:multi]
 
         (feeds[id] ||= {})[name] = feed
       end
