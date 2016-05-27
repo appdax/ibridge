@@ -36,8 +36,9 @@ RSpec.describe Unifier do
   describe '#run' do
     let!(:importer) { Importer.new path: 'tmp/data' }
     let!(:db) { importer.send(:db) }
+    let!(:time) { Time.utc(2016, 5, 2, 21, 26, 0) }
 
-    before { Timecop.freeze(Time.utc(2016, 5, 2, 21, 26, 0)) }
+    before { Timecop.freeze(time) }
 
     context 'when unifying the stock' do
       let(:feeds) { db.collections.delete_if { |col| col.name == 'stocks' } }
@@ -86,6 +87,7 @@ RSpec.describe Unifier do
 
         context 'when importing newer intraday feed' do
           before do
+            Timecop.return
             db.collections.each { |col| col.drop unless col.name == 'stocks' }
             import_file(importer, 'spec/fixtures/facebook.intra.json')
           end
@@ -95,6 +97,10 @@ RSpec.describe Unifier do
 
             describe 'unified stock' do
               let!(:stock) { db[:stocks].find.limit(1).first }
+
+              it('should have newer updated_at timestamp') do
+                expect(stock[:updated_at]).to be > stock[:created_at]
+              end
 
               it('should have newer intraday data') do
                 expect(stock[:intraday][:meta][:age]).to eq(13)

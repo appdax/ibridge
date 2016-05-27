@@ -70,13 +70,34 @@ class Unifier < Client
   #
   # @return [ Void ]
   def copy_basics(ids)
+    insert_new_stocks(ids)
+    update_timestamp(ids)
+  end
+
+  # Insert basic data into stocks collection who do not exist yet.
+  #
+  # @param [ Array<String> ] ids List of ISINs
+  #
+  # @return [ Void ]
+  def insert_new_stocks(ids)
     store = db[:basics]
     len   = ids.size
+    time  = Time.now.utc
 
     store.find(_id: { '$in': ids }).batch_size(len).each_slice(len) do |basics|
-      basics.map! { |stock| { insert_one: stock } }
+      basics.map! { |stock| { insert_one: stock.merge!(created_at: time) } }
       db[:stocks].bulk_write(basics, OPTS)
     end
+  end
+
+  # Assign current timestamp to the updated_at field of the specfied stocks.
+  #
+  # @param [ Array<String> ] ids List of ISINs
+  #
+  # @return [ Void ]
+  def update_timestamp(ids)
+    db[:stocks].find(_id: { '$in': ids })
+               .update_many('$set': { updated_at: Time.now.utc })
   end
 
   # Unifies the specified feeds of the specified stocks.
