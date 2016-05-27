@@ -37,6 +37,8 @@ RSpec.describe Unifier do
     let!(:importer) { Importer.new path: 'tmp/data' }
     let!(:db) { importer.send(:db) }
 
+    before { Timecop.freeze(Time.utc(2016, 5, 2, 21, 26, 0)) }
+
     context 'when unifying the stock' do
       let(:feeds) { db.collections.delete_if { |col| col.name == 'stocks' } }
 

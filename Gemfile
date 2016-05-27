@@ -16,6 +16,7 @@ group :test do
   gem 'webmock', '~> 2.0'
   gem 'fakefs', '~> 0.8'
   gem 'hashdiff', '~> 0.3'
+  gem 'timecop', '~> 0.8'
   gem 'simplecov'
   gem 'codeclimate-test-reporter'
 end

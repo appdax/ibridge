@@ -108,7 +108,9 @@ class Importer < Client
   #
   # @return [ Void ]
   def import_basics(basics)
-    basics.map! { |stock| { insert_one: stock } }
+    timestamp = Time.now.utc
+
+    basics.map! { |stock| { insert_one: stock.merge!(updated_at: timestamp) } }
 
     db[:basics].bulk_write(basics, OPTS)
   end

@@ -1,6 +1,7 @@
 require 'simplecov'
 require 'webmock/rspec'
 require 'codeclimate-test-reporter'
+require 'timecop'
 require 'pry'
 
 WebMock.disable_net_connect!(allow: 'codeclimate.com')
