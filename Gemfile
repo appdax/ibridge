@@ -6,6 +6,7 @@ gem 'mongo', '~> 2.2'
 gem 'dropbox-sdk', '~> 1.6'
 
 gem 'rake', '~> 11.1', require: false
+gem 'whenever', '~> 0.9', require: false
 
 group :development, :test do
   gem 'pry-nav'

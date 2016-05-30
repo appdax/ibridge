@@ -38,9 +38,7 @@ RUN apk del $BUILD_PACKAGES && \
     rm -rf $APP_HOME/.git && \
     rm -rf $APP_HOME/spec
 
-COPY scripts/hourly /etc/periodic/hourly
-RUN chmod -R +x /etc/periodic/
+RUN chmod -R +x bin
+RUN bundle exec whenever -i
 
-RUN chmod -R +x $APP_HOME/scripts/init
-
-CMD ["./scripts/init"]
+CMD ["./bin/init"]
