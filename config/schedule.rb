@@ -5,7 +5,8 @@
 
 set :path, ENV.fetch('APP_HOME', Whenever.path)
 set :job_template, "/bin/sh -l -c ':job'"
-set :environment_variable, 'APP_ENV'
+
+job_type :rake, 'cd :path && :bundle_command rake :task --silent :output'
 
 every :hour do
   rake 'import:stocks'
