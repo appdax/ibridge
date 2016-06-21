@@ -1,12 +1,12 @@
-require 'benchmark'
-require 'drive'
-require 'importer'
-require 'unifier'
 
 namespace :import do
   desc 'Import stocks into the db'
   task :stocks, [:drop_feeds] do |_, args|
     args.with_defaults drop_feeds: true
+    require 'benchmark'
+    require 'drive'
+    require 'importer'
+    require 'unifier'
     import_revisions(args[:drop_feeds])
   end
 end

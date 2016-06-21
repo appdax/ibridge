@@ -1,6 +1,7 @@
-install: true
-
+language: ruby
 sudo: false
+install:
+  - gem install rake
 
 services:
   - docker
@@ -10,13 +11,11 @@ before_script:
   - git submodule update --remote
 
 script:
-  - docker build -t appdax/sbridge:test -f Dockerfile.test .
+  - rake build:test
   - docker run -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN -t appdax/sbridge:test
-  - docker rmi -f appdax/sbridge:test
-  - docker build -t appdax/sbridge:edge -f Dockerfile .
-  - docker ps -a
-  - docker images --filter "dangling=false"
+  - rake build:edge
+  - docker images -f dangling=false
 
 after_success:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push appdax/sbridge
+  - docker push appdax/sbridge:edge

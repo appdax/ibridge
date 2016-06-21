@@ -7,8 +7,7 @@ begin
     t.rspec_opts = '--format documentation --color --require spec_helper'
   end
 
-  task :default do
-    system 'docker build -t appdax/sbridge:test -f Dockerfile.test .'
+  task default: ['build:test'] do
     system 'docker run -it appdax/sbridge:test'
   end
 rescue LoadError # rubocop:disable Lint/HandleExceptions

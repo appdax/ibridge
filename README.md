@@ -2,6 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/appdax/sbridge/badges/gpa.svg)](https://codeclimate.com/github/appdax/sbridge)
 [![Test Coverage](https://codeclimate.com/github/appdax/sbridge/badges/coverage.svg)](https://codeclimate.com/github/appdax/sbridge/coverage)
 [![Dependency Status](https://gemnasium.com/badges/github.com/appdax/sbridge.svg)](https://gemnasium.com/github.com/appdax/sbridge)
+[![Docker Container](https://imagelayers.io/badge/appdax/sbridge:edge.svg)](https://imagelayers.io/?images=appdax/sbridge:edge)
 [![Inline docs](http://inch-ci.org/github/appdax/sbridge.svg?branch=master)](http://inch-ci.org/github/appdax/sbridge)
 
 # sbridge
