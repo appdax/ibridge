@@ -4,6 +4,7 @@ raise 'Ruby 2.2 or newer required' unless RUBY_VERSION >= '2.2.0'
 
 gem 'mongo', '~> 2.2'
 gem 'dropbox-sdk', '~> 1.6'
+gem 'json', '~> 2.0'
 
 gem 'rake', '~> 11.1', require: false
 gem 'whenever', '~> 0.9', require: false
