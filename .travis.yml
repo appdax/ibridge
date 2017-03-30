@@ -3,6 +3,9 @@ sudo: false
 install:
   - gem install rake
 
+matrix:
+  fast_finish: true
+
 services:
   - docker
 
